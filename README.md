@@ -1,40 +1,33 @@
-Below are the steps to get your plugin running. You can also find instructions at:
+# Image Batch Styles
 
-  https://www.figma.com/plugin-docs/plugin-quickstart-guide/
+Creating image styles in Figma takes a lot of clicks, and it's all one image at a time. This plugin allows you to create images styles in bulk from a selection of images.
 
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
+> This plugin is from August 2024 when I needed to create a lot of image styles in bulk. I used ChatGPT to generate a utilitarian v1. I may take it further and publish to the Figma Community, but my focus is currently on other projects. Someone asked about this plugin, and so I went ahead to share here in case it can save you some time.
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
+## Getting setup (development-mode for now)
 
-  https://nodejs.org/en/download/
+For now you can use it in Figma's plugin development mode:
 
-Next, install TypeScript using the command:
+1. Clone or [download this repo](https://github.com/benbennitt/figma-plugin-image-batch-styles/archive/refs/heads/main.zip).
+2. In Figma, right-click and go to Plugins > Development > Import plugin from manifest...
+3. Select the `manifest.json` from this project
 
-  npm install -g typescript
+## Using the plugin
 
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
+1. Name the image layers you want to convert to styles. Their layer names will be the style names.
+2. Select your image layers.
+3. Run the plugin, optionally enter a style prefix, then click Create Styles.
 
-  npm install --save-dev @figma/plugin-typings
+That's it! The plugin creates a fill style for each selected layer’s image, names it with your prefix + the layer name, and applies the new style to that layer.
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
+## Development
 
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+**Requirements:** [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) (`npm install -g pnpm`).
 
-For more information, visit https://www.typescriptlang.org/
+1. In this folder: `pnpm install`.
+2. **While developing:** run `pnpm run watch` so `code.ts` is recompiled to `build/code.js` as you edit.
+3. **One-off compile:** run `pnpm run build` to compile once (e.g. before importing the plugin or sharing the folder).
 
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
+## License
 
-We recommend writing TypeScript code using Visual Studio code:
-
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "npm: watch". You will have to do this again every time
-    you reopen Visual Studio Code.
-
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+MIT

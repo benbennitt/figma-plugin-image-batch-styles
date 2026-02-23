@@ -2,7 +2,7 @@
   "name": "Image Batch Styles",
   "id": "1407824860258855965",
   "api": "1.0.0",
-  "main": "code.js",
+  "main": "build/code.js",
   "capabilities": [],
   "enableProposedApi": false,
   "documentAccess": "dynamic-page",

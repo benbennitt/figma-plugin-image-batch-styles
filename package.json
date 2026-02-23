@@ -1,16 +1,16 @@
 {
-  "name": "Image-Batch-Styles",
+  "name": "image-batch-styles",
   "version": "1.0.0",
-  "description": "Your Figma Plugin",
-  "main": "code.js",
+  "description": "Figma plugin to create fill styles in bulk from a selection of image layers.",
+  "main": "build/code.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
-    "watch": "npm run build -- --watch"
+    "watch": "tsc -p tsconfig.json --watch"
   },
-  "author": "",
-  "license": "",
+  "author": "Ben Bennitt & AI",
+  "license": "MIT",
   "devDependencies": {
     "@figma/eslint-plugin-figma-plugins": "*",
     "@figma/plugin-typings": "^1.98.0",
