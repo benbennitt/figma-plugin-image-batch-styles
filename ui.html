@@ -1,0 +1,13 @@
+<div>
+  <label for="prefix">Style Prefix: </label>
+  <input type="text" id="prefix" placeholder="Enter prefix">
+  <button id="createStyles">Create Styles</button>
+</div>
+
+<script>
+  // When the button is clicked, send the prefix to the plugin code
+  document.getElementById('createStyles').onclick = () => {
+    const prefix = document.getElementById('prefix').value;
+    parent.postMessage({ pluginMessage: { type: 'create-styles', prefix: prefix } }, '*');
+  };
+</script>
