@@ -23,6 +23,8 @@ _*Use Figma's built-in batch layer renaming features as needed._
 
 That's it! The plugin creates a fill style for each selected layer’s image, names it with your prefix + the layer name, and applies the new style to that layer.
 
+![preview](./images/preview.webp)
+
 ## Development
 
 **Requirements:** [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) (`npm install -g pnpm`).
