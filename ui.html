@@ -3,30 +3,63 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
+  height: 100%;
   margin: 0;
-  padding: 12px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 12px;
   color: var(--figma-color-text);
   background: var(--figma-color-bg);
 }
 
-.form-row {
+/* ── Empty state ── */
+
+.empty-state {
+  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 16px;
+  font-size: 14px;
+  color: var(--figma-color-text);
+  line-height: 1.6;
 }
 
-label {
-  flex-shrink: 0;
-  color: var(--figma-color-text-secondary);
+/* ── Form state ── */
+
+.form-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
+
+.section {
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--figma-color-border);
+}
+
+.section-heading {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--figma-color-text-secondary);
+  margin-bottom: 8px;
+}
+
+/* ── Prefix input ── */
 
 input[type="text"] {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   padding: 6px 8px;
   border: 1px solid var(--figma-color-border-strong);
   border-radius: 4px;
@@ -40,14 +73,67 @@ input[type="text"]:focus {
   border-color: var(--figma-color-border-selected);
 }
 
-button {
-  padding: 8px 12px;
-  border: none;
+/* ── Tip callout ── */
+
+.tip {
+  margin-top: 6px;
+  padding: 6px 8px;
   border-radius: 4px;
+  background: var(--figma-color-bg-secondary);
+  font-size: 11px;
+  color: var(--figma-color-text-secondary);
+  line-height: 1.4;
+}
+
+.tip code {
+  font-family: 'SF Mono', SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--figma-color-bg-tertiary);
+  color: var(--figma-color-text);
+}
+
+/* ── Preview list ── */
+
+.preview-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.preview-list li {
+  padding: 4px 8px;
+  border-radius: 3px;
+  background: var(--figma-color-bg-secondary);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-list li.preview-more {
+  background: none;
+  color: var(--figma-color-text-secondary);
+  padding-left: 8px;
+}
+
+/* ── Create button ── */
+
+.form-actions {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+button {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
   background: var(--figma-color-bg-brand);
   color: var(--figma-color-text-onbrand);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -55,27 +141,92 @@ button:hover {
   background: var(--figma-color-bg-brand-hover);
 }
 
+/* ── Build info ── */
+
 .build-info {
-  margin-top: 12px;
   padding-top: 8px;
-  border-top: 1px solid var(--figma-color-border);
   font-size: 11px;
   color: var(--figma-color-text-tertiary);
+  text-align: right;
+}
+
+.hidden {
+  display: none;
 }
 </style>
 
-<div class="form-row">
-  <label for="prefix">Style Prefix:</label>
-  <input type="text" id="prefix" placeholder="Enter prefix">
+<div id="emptyState" class="empty-state">
+  Select image layers on the canvas to get started.
 </div>
-<div class="form-row">
-  <button id="createStyles">Create Styles</button>
+
+<div id="formState" class="form-state hidden">
+  <div class="section">
+    <div class="section-heading">Prefix</div>
+    <input type="text" id="prefix" placeholder="Optional">
+    <div class="tip">Use <code>/</code> to organize styles into folders, e.g. <code>photos/people/</code></div>
+  </div>
+
+  <div class="section-heading">Preview</div>
+  <ul class="preview-list" id="previewList"></ul>
+
+  <div class="form-actions">
+    <button id="createStyles">Create Styles</button>
+  </div>
 </div>
+
 <div class="build-info">v0.0.1</div>
 
 <script>
-  document.getElementById('createStyles').onclick = function () {
-    var prefix = document.getElementById('prefix').value;
+  var layerNames = [];
+  var MAX_PREVIEW = 5;
+
+  var emptyState = document.getElementById('emptyState');
+  var formState = document.getElementById('formState');
+  var prefixInput = document.getElementById('prefix');
+  var previewList = document.getElementById('previewList');
+  var createBtn = document.getElementById('createStyles');
+
+  function renderPreview() {
+    var prefix = prefixInput.value;
+    previewList.innerHTML = '';
+
+    var showing = layerNames.slice(0, MAX_PREVIEW);
+    var remaining = layerNames.length - showing.length;
+
+    for (var i = 0; i < showing.length; i++) {
+      var li = document.createElement('li');
+      li.textContent = prefix + showing[i];
+      previewList.appendChild(li);
+    }
+
+    if (remaining > 0) {
+      var more = document.createElement('li');
+      more.className = 'preview-more';
+      more.textContent = 'and ' + remaining + ' more';
+      previewList.appendChild(more);
+    }
+  }
+
+  onmessage = function (event) {
+    var msg = event.data.pluginMessage;
+    if (!msg || msg.type !== 'selection') return;
+
+    layerNames = msg.layerNames || [];
+
+    if (layerNames.length === 0) {
+      emptyState.classList.remove('hidden');
+      formState.classList.add('hidden');
+    } else {
+      emptyState.classList.add('hidden');
+      formState.classList.remove('hidden');
+      renderPreview();
+    }
+  };
+
+  prefixInput.addEventListener('input', renderPreview);
+
+  createBtn.onclick = function () {
+    var prefix = prefixInput.value;
     parent.postMessage({ pluginMessage: { type: 'create-styles', prefix: prefix } }, '*');
   };
 </script>

@@ -8,35 +8,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// Show the UI to get the prefix input from the user
-figma.showUI(__html__, { width: 300, height: 150, themeColors: true });
+figma.showUI(__html__, { width: 380, height: 420, themeColors: true });
+function getImageLayerNames() {
+    const names = [];
+    for (const node of figma.currentPage.selection) {
+        if (node.type === "RECTANGLE" || node.type === "FRAME") {
+            const fills = node.fills;
+            if (fills && fills.some((f) => f.type === "IMAGE")) {
+                names.push(node.name || "Untitled");
+            }
+        }
+    }
+    return names;
+}
+function sendSelection() {
+    figma.ui.postMessage({
+        type: 'selection',
+        layerNames: getImageLayerNames(),
+    });
+}
+sendSelection();
+figma.on('selectionchange', sendSelection);
 figma.ui.onmessage = (msg) => __awaiter(void 0, void 0, void 0, function* () {
     if (msg.type === 'create-styles') {
-        const prefix = msg.prefix || ''; // Get the prefix or use an empty string if none is provided
+        const prefix = msg.prefix || '';
         const selectedNodes = figma.currentPage.selection;
         if (selectedNodes.length === 0) {
-            figma.closePlugin("No layers selected.");
+            figma.notify("No layers selected.");
+            return;
         }
-        else {
-            for (const [index, node] of selectedNodes.entries()) {
-                if (node.type === "RECTANGLE" || node.type === "FRAME") {
-                    const fills = node.fills;
-                    if (fills && fills.length > 0) {
-                        const imagePaints = fills.filter((fill) => fill.type === "IMAGE");
-                        if (imagePaints.length > 0) {
-                            // Create a style name based on the prefix and the node's name
-                            const styleName = prefix + (node.name || `ImageStyle_${index + 1}`);
-                            // Create a new paint style
-                            const paintStyle = figma.createPaintStyle();
-                            paintStyle.name = styleName;
-                            paintStyle.paints = imagePaints;
-                            // Apply the style back to the node asynchronously
-                            yield node.setFillStyleIdAsync(paintStyle.id);
-                        }
+        let created = 0;
+        for (const [index, node] of selectedNodes.entries()) {
+            if (node.type === "RECTANGLE" || node.type === "FRAME") {
+                const fills = node.fills;
+                if (fills && fills.length > 0) {
+                    const imagePaints = fills.filter((fill) => fill.type === "IMAGE");
+                    if (imagePaints.length > 0) {
+                        const styleName = prefix + (node.name || `ImageStyle_${index + 1}`);
+                        const paintStyle = figma.createPaintStyle();
+                        paintStyle.name = styleName;
+                        paintStyle.paints = imagePaints;
+                        yield node.setFillStyleIdAsync(paintStyle.id);
+                        created++;
                     }
                 }
             }
-            figma.closePlugin("Image styles created successfully.");
         }
+        figma.closePlugin(`Created ${created} style${created !== 1 ? 's' : ''}.`);
     }
 });
