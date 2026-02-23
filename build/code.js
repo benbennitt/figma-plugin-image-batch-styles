@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 // Show the UI to get the prefix input from the user
-figma.showUI(__html__, { width: 300, height: 100 });
+figma.showUI(__html__, { width: 300, height: 150, themeColors: true });
 figma.ui.onmessage = (msg) => __awaiter(void 0, void 0, void 0, function* () {
     if (msg.type === 'create-styles') {
         const prefix = msg.prefix || ''; // Get the prefix or use an empty string if none is provided

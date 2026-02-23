@@ -1,6 +1,6 @@
 {
   "name": "image-batch-styles",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Figma plugin to create fill styles in bulk from a selection of image layers.",
   "main": "build/code.js",
   "scripts": {

@@ -2,7 +2,7 @@
 
 Creating image styles in Figma takes a lot of clicks, and it's all one image at a time. This plugin allows you to create images styles in bulk from a selection of images.
 
-> This plugin is from August 2024 when I needed to create a lot of image styles in bulk. I used ChatGPT to generate a utilitarian v1. I may take it further and publish to the Figma Community, but my focus is currently on other projects. Someone asked about this plugin, and so I went ahead to share here in case it can save you some time.
+> This plugin is from August 2024 when I needed to create a lot of image styles in bulk. I used Figma's starter files and ChatGPT to create a utilitarian v1. I may take this further and publish to the Figma Community, but my focus is currently on other projects. Someone asked about this plugin, and so I went ahead to share here in case it can save you some time.
 
 ## Getting setup (development-mode for now)
 

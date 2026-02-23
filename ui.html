@@ -1,13 +1,81 @@
-<div>
-  <label for="prefix">Style Prefix: </label>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  color: var(--figma-color-text);
+  background: var(--figma-color-bg);
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+label {
+  flex-shrink: 0;
+  color: var(--figma-color-text-secondary);
+}
+
+input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--figma-color-border-strong);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--figma-color-text);
+  background: var(--figma-color-bg);
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--figma-color-border-selected);
+}
+
+button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background: var(--figma-color-bg-brand);
+  color: var(--figma-color-text-onbrand);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--figma-color-bg-brand-hover);
+}
+
+.build-info {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--figma-color-border);
+  font-size: 11px;
+  color: var(--figma-color-text-tertiary);
+}
+</style>
+
+<div class="form-row">
+  <label for="prefix">Style Prefix:</label>
   <input type="text" id="prefix" placeholder="Enter prefix">
+</div>
+<div class="form-row">
   <button id="createStyles">Create Styles</button>
 </div>
+<div class="build-info">v0.0.1</div>
 
 <script>
-  // When the button is clicked, send the prefix to the plugin code
-  document.getElementById('createStyles').onclick = () => {
-    const prefix = document.getElementById('prefix').value;
+  document.getElementById('createStyles').onclick = function () {
+    var prefix = document.getElementById('prefix').value;
     parent.postMessage({ pluginMessage: { type: 'create-styles', prefix: prefix } }, '*');
   };
 </script>
